@@ -73,9 +73,20 @@ app.put('/api/courses/:id', (req, res)=> {
   res.send(course)
 
 })
-// app.post()
-// app.put()
-// app.delete()
+
+app.delete('/api/courses/:id', (req, res)=> {
+  // Lookup the course
+  // not existing , return 404
+  const course = courses.find(e => e.id === parseInt(req.params.id))
+  if(!course) { //404
+    res.status(404).send('the course with the given Id was not found')
+  }
+  // delete
+  const index = courses.indexOf(course)
+  courses.splice(index, 1)
+  // return the same course
+  res.send(course)
+})
 
 function validateCourse(course) {
   const schema = {
