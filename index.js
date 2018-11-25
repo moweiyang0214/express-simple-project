@@ -1,3 +1,4 @@
+const Joi = require('joi')
 const express = require('express')
 const app = express();
 
@@ -19,6 +20,12 @@ app.get('/api/courses', (req,res) => {
 })
 
 app.post('/api/courses', (req, res) => {
+  const { error } = validateCourse(req.body)
+  if(error){
+    res.status(400).send(error.details[0].message)
+    return
+  }
+
   const course = {
     id: courses.length + 1,
     name: req.body.name
@@ -27,8 +34,8 @@ app.post('/api/courses', (req, res) => {
   res.send(course)
 })
 
-app.get('/api/courses/:course_id', (req, res) => {
-  const course = courses.find(e => e.id === parseInt(req.params.course_id))
+app.get('/api/courses/:id', (req, res) => {
+  const course = courses.find(e => e.id === parseInt(req.params.id))
   if(!course) { //404
     res.status(404).send('the course with the given Id was not found')
   } else {
@@ -45,6 +52,35 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`listening on port ${port}...`)
 })
+
+app.put('/api/courses/:id', (req, res)=> {
+  // Look up the course
+  // if not existing, return 404
+  const course = courses.find(e => e.id === parseInt(req.params.id))
+  if(!course) { //404
+    res.status(404).send('the course with the given Id was not found')
+  }
+  // validate
+  // if invalid, return 400 - Bad request
+  const { error } = validateCourse(req.body) // result.error
+  if(error){
+    res.status(400).send(error.details[0].message)
+    return
+  }
+  // update course
+  course.name = req.body.name
+  // return the updated course
+  res.send(course)
+
+})
 // app.post()
 // app.put()
 // app.delete()
+
+function validateCourse(course) {
+  const schema = {
+    name: Joi.string().min(3).required()
+  }
+
+  return Joi.validate(course, schema)
+}
