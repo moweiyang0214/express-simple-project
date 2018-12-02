@@ -1,3 +1,5 @@
+const helmet = require('helmet')
+const morgan = require('morgan')
 const Joi = require('joi')
 const express = require('express')
 const app = express();
@@ -8,7 +10,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true})) 
 // middleware that can serve static content
 app.use(express.static('public'))
-
+app.use(helmet())
+app.use(morgan('tiny'))
 app.use(logger)
 
 app.use(function(req, res, next) {
