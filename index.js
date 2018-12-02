@@ -5,13 +5,20 @@ const express = require('express')
 const app = express();
 const logger = require('./logger')
 
+console.log(`Node_ENV: ${process.env.NODE_ENV}`) // undefined
+console.log(`app: ${app.get('env')}`)
 // middleware
 app.use(express.json())
 app.use(express.urlencoded({extended: true})) 
 // middleware that can serve static content
 app.use(express.static('public'))
 app.use(helmet())
-app.use(morgan('tiny'))
+// use `export NODE_ENV=product` will not be able
+if(app.get('env') === 'development'){
+  app.use(morgan('tiny'))
+  console.log('morgan enable...')
+}
+
 app.use(logger)
 
 app.use(function(req, res, next) {
