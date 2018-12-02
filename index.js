@@ -1,12 +1,15 @@
 const startupDebugger = require('debug')('app:startup')
 const dbDebugger = require('debug')('app:db')
+const logger = require('./logger')
 const config = require('config')
 const helmet = require('helmet')
 const morgan = require('morgan')
 const Joi = require('joi')
 const express = require('express')
 const app = express();
-const logger = require('./logger')
+
+app.set('view engine', 'pug')
+app.set('views', './views') // default
 
 console.log(`Node_ENV: ${process.env.NODE_ENV}`) // undefined
 console.log(`app: ${app.get('env')}`)
@@ -45,7 +48,10 @@ const courses = [
 ]
 
 app.get('/', (req, res) => {
-  res.send('Hello world!!!')
+  res.render('index', {
+    title: 'My Express APP',
+    message: 'Hello'
+  })
 })
 
 app.get('/api/courses', (req,res) => {
