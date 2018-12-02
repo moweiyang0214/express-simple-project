@@ -1,12 +1,15 @@
 const Joi = require('joi')
 const express = require('express')
 const app = express();
+const logger = require('./logger')
 
 // middleware
 app.use(express.json())
 
+app.use(logger)
+
 app.use(function(req, res, next) {
-  console.log('logging....')
+  console.log('Authenticating...')
   next()
 })
 
