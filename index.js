@@ -5,6 +5,9 @@ const logger = require('./logger')
 
 // middleware
 app.use(express.json())
+app.use(express.urlencoded({extended: true})) 
+// middleware that can serve static content
+app.use(express.static('public'))
 
 app.use(logger)
 
