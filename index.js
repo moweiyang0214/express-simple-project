@@ -1,3 +1,5 @@
+const startupDebugger = require('debug')('app:startup')
+const dbDebugger = require('debug')('app:db')
 const config = require('config')
 const helmet = require('helmet')
 const morgan = require('morgan')
@@ -23,8 +25,11 @@ console.log('mail password: '+ config.get('mail.password'))
 // use `export NODE_ENV=product` will not be able
 if(app.get('env') === 'development'){
   app.use(morgan('tiny'))
-  console.log('morgan enable...')
+  startupDebugger('morgan enable...')
 }
+
+// DB work
+dbDebugger('Connected to the database...')
 
 app.use(logger)
 
