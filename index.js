@@ -1,3 +1,4 @@
+const config = require('config')
 const helmet = require('helmet')
 const morgan = require('morgan')
 const Joi = require('joi')
@@ -13,6 +14,12 @@ app.use(express.urlencoded({extended: true}))
 // middleware that can serve static content
 app.use(express.static('public'))
 app.use(helmet())
+
+//configuration
+console.log('Application Name: '+ config.get('name'))
+console.log('mail-server: '+ config.get('mail.host'))
+console.log('mail password: '+ config.get('mail.password'))
+
 // use `export NODE_ENV=product` will not be able
 if(app.get('env') === 'development'){
   app.use(morgan('tiny'))
